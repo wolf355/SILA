@@ -42,6 +42,7 @@ export class DashboardAstronaute implements AfterViewInit {
   recommandation = signal('');
   lienEnLigne = signal(true);
   derniereMaj = signal('');
+  donneesRecues = signal(false);
 
   chatOuvert = false;
   enAttente = signal(false);
@@ -131,9 +132,13 @@ export class DashboardAstronaute implements AfterViewInit {
         etat: this.calculerEtat(m.code, valeur)
       };
     });
-    this.cartes.set(cartes);
-
     const mesAlertes = d.alertes.filter(a => a.id_astronaute === this.idAstronaute);
+
+    // A card turns critical when a critical alert is about its parameter
+    const cartesAffichees = cartes.map(c =>
+      this.alerteCritiquePour(c.code, mesAlertes) ? { ...c, etat: 'critique' } : c
+    );
+    this.cartes.set(cartesAffichees);
     const alerte = mesAlertes.length > 0 ? mesAlertes[0] : null;
     this.nombreAlertes.set(mesAlertes.length);
     this.alerteActive.set(alerte);
@@ -156,6 +161,12 @@ export class DashboardAstronaute implements AfterViewInit {
     this.majGraphique(this.graphFc, d.serieFc, 'FC');
     this.majGraphique(this.graphSpo2, d.serieSpo2, 'SPO2');
     this.derniereMaj.set(new Date().toLocaleTimeString('en-GB'));
+    this.donneesRecues.set(true);
+  }
+
+  alerteCritiquePour(code: string, alertes: Alerte[]): boolean {
+    const motif = new RegExp('\\b' + code + '\\b');
+    return alertes.some(a => a.niveau === 'critique' && motif.test(a.message));
   }
 
   calculerEtat(code: string, valeur: number | null): string {

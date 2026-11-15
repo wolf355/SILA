@@ -388,3 +388,40 @@ nav a {
   color: #FFFFFF;
   cursor: pointer;
 }
+
+
+/* UI finishing pack */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  flex-shrink: 0;
+  align-self: flex-start;
+  overflow-y: auto;
+  z-index: 30;
+}
+
+.zone-graphique {
+  position: relative;
+}
+
+.attente {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--carte);
+  color: var(--texte-secondaire);
+  font-size: 15px;
+}
+
+.bandeau-serveur {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid var(--orange);
+  color: var(--orange);
+  font-size: 14px;
+}

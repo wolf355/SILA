@@ -10,10 +10,14 @@
       </nav>
     </div>
 
+    <div class="bas-menu">
+      <app-urgence [idAstronaute]="idAstronaute" />
+
     <div class="utilisateur">
       <strong>{{ nom() }}</strong>
       <span>Mission {{ mission }}</span>
       <a routerLink="/">Change profile</a>
+    </div>
     </div>
   </aside>
 
@@ -24,15 +28,19 @@
         <span>Day {{ jour }}</span>
         <span>
           <span class="point" [class.hors-ligne]="!lienEnLigne()"></span>
-          Ground link: {{ lienEnLigne() ? 'Online' : 'Offline' }}
+          Server: {{ lienEnLigne() ? 'Online' : 'Offline' }}
         </span>
         <span class="cloche">🔔 @if (nombreAlertes() > 0) { <span class="pastille">{{ nombreAlertes() }}</span> }</span>
-        <span class="maj">Last update: {{ derniereMaj() }}</span>
+        <span class="maj">Last update: {{ derniereMaj() || '--' }}</span>
       </div>
     </header>
 
+    @if (!lienEnLigne()) {
+      <div class="bandeau-serveur" role="status">Cannot reach the server. The data shown may be out of date.</div>
+    }
+
     @if (alerteActive(); as alerte) {
-      <div [class]="'bandeau ' + alerte.niveau">
+      <div [class]="'bandeau ' + alerte.niveau" role="alert">
         <strong>Alert:</strong> {{ alerte.message }}
       </div>
     }
@@ -47,7 +55,7 @@
               <span class="unite">{{ c.unite }}</span>
             }
           </p>
-          <span [class]="'badge ' + c.etat">{{ c.etat === 'aucune' ? 'no data' : c.etat }}</span>
+          <span [class]="'badge ' + c.etat">{{ c.etat === 'aucune' ? 'no data' : (c.etat === 'critique' ? 'critical' : c.etat) }}</span>
         </div>
       }
     </section>
@@ -57,6 +65,9 @@
         <h3>Heart rate - latest measurements</h3>
         <div class="zone-graphique">
           <canvas #graphiqueFc></canvas>
+          @if (!donneesRecues()) {
+            <div class="attente">Waiting for data...</div>
+          }
         </div>
       </div>
 
@@ -64,21 +75,22 @@
         <h3>SpO2 - latest measurements</h3>
         <div class="zone-graphique">
           <canvas #graphiqueSpo2></canvas>
+          @if (!donneesRecues()) {
+            <div class="attente">Waiting for data...</div>
+          }
         </div>
       </div>
     </section>
 
     <section [class]="'carte-reco ' + niveauReco()">
       <h3>Recommendations</h3>
-      <p>{{ recommandation() }}</p>
+      <p>{{ recommandation() || 'Waiting for data...' }}</p>
     </section>
 
     <p class="avertissement">AI assistant is not a substitute for a doctor.</p>
   </main>
 
-  <app-urgence [idAstronaute]="idAstronaute" />
-
-  <button class="bouton-chat" (click)="ouvrirFermerChat()">💬</button>
+  <button class="bouton-chat" aria-label="Open the assistant chat" (click)="ouvrirFermerChat()">💬</button>
 
   @if (chatOuvert) {
     <div class="panneau-chat">

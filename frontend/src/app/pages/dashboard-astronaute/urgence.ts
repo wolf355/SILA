@@ -71,9 +71,9 @@ type EtatUrgence = 'inactif' | 'ecoute' | 'envoi' | 'envoye' | 'erreur';
     }
   `,
   styles: [`
-    .commandes { position: fixed; left: 264px; bottom: 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; z-index: 20; }
-    .sos { background: var(--rouge); color: white; border: none; border-radius: 12px; padding: 14px 22px; font-size: 16px; font-weight: 700; cursor: pointer; }
-    .veille { background: var(--carte); color: var(--texte-secondaire); border: 1px solid var(--bordure); border-radius: 12px; padding: 12px 16px; cursor: pointer; }
+    .commandes { display: flex; flex-direction: column; gap: 8px; }
+    .sos { width: 100%; background: var(--rouge); color: white; border: none; border-radius: 12px; padding: 14px 16px; font-size: 16px; font-weight: 700; cursor: pointer; }
+    .veille { width: 100%; background: transparent; color: var(--texte-secondaire); border: 1px solid var(--bordure); border-radius: 12px; padding: 10px 12px; font-size: 14px; cursor: pointer; }
     .veille.actif { color: white; border-color: var(--vert); }
     .veille:disabled { opacity: 0.5; cursor: not-allowed; }
     .aide { font-size: 13px; color: var(--texte-secondaire); }

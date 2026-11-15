@@ -48,3 +48,26 @@ h1 {
   font-size: 12px;
   color: var(--texte-secondaire);
 }
+
+.slogan {
+  margin: 8px 0 20px;
+}
+
+.points-forts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 36px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 880px;
+}
+
+.points-forts li {
+  padding: 8px 14px;
+  border: 1px solid var(--bordure);
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--texte-secondaire);
+}

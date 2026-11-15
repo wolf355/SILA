@@ -48,6 +48,7 @@ export class VueMedecin implements AfterViewInit {
   private urgencesIgnorees = signal<string[]>([]);
   urgencesVisibles = computed(() => this.urgences().filter(u => !this.urgencesIgnorees().includes(u.id_message)));
   derniereMaj = signal('');
+  donneesRecues = signal(false);
   resume = signal('');
     modeResume = signal('');
   resumeEnCours = signal(false);
@@ -187,6 +188,7 @@ export class VueMedecin implements AfterViewInit {
 
     this.dessiner();
     this.derniereMaj.set(new Date().toLocaleTimeString('en-GB'));
+    this.donneesRecues.set(true);
   }
 
   valeur(mesures: MesureRecente[], code: string): number | null {

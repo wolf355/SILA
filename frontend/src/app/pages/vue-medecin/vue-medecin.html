@@ -26,13 +26,17 @@
       <div class="infos">
         <span>
           <span class="point" [class.hors-ligne]="!lienEnLigne()"></span>
-          Ground link: {{ lienEnLigne() ? 'Online' : 'Offline' }}
+          Server: {{ lienEnLigne() ? 'Online' : 'Offline' }}
         </span>
         <span>🔔 @if (alertes().length > 0) { <span class="pastille">{{ alertes().length }}</span> }</span>
-        <span class="maj">Last update: {{ derniereMaj() }}</span>
+        <span class="maj">Last update: {{ derniereMaj() || '--' }}</span>
         <button class="bouton-resume" (click)="ouvrirFermerResume()">Crew summary</button>
       </div>
     </header>
+
+    @if (!lienEnLigne()) {
+      <div class="bandeau-serveur" role="status">Cannot reach the server. The data shown may be out of date.</div>
+    }
 
     @for (u of urgencesVisibles(); track u.id_message) {
       <div class="bandeau-urgence" role="alert">
@@ -53,7 +57,7 @@
             </div>
           </div>
 
-          <span [class]="'badge ' + a.etat">{{ a.etat }}</span>
+          <span [class]="'badge ' + a.etat">{{ a.etat === 'critique' ? 'critical' : a.etat }}</span>
 
           <div class="valeurs">
             <div>
@@ -90,12 +94,12 @@
               <tr>
                 <td>{{ formaterAlerte(al.date_creation) }}</td>
                 <td>{{ al.nom_code }}</td>
-                <td><span [class]="'badge ' + al.niveau">{{ al.niveau }}</span></td>
+                <td><span [class]="'badge ' + al.niveau">{{ al.niveau === 'critique' ? 'critical' : al.niveau }}</span></td>
                 <td class="message-alerte">{{ al.message }}</td>
               </tr>
             } @empty {
               <tr>
-                <td colspan="4">No active alerts</td>
+                <td colspan="4">{{ donneesRecues() ? 'No active alerts' : 'Waiting for data...' }}</td>
               </tr>
             }
           </tbody>
@@ -118,6 +122,9 @@
         </div>
         <div class="zone-graphique">
           <canvas #canvasGraphique></canvas>
+          @if (!donneesRecues()) {
+            <div class="attente">Waiting for data...</div>
+          }
         </div>
       </div>
     </section>
