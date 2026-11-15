@@ -164,8 +164,17 @@ export class DashboardAstronaute implements AfterViewInit {
     this.donneesRecues.set(true);
   }
 
+  // Words that identify each parameter in an alert message (French or English, any case)
+  private motifsAlerte: Record<string, RegExp> = {
+    FC: /\bFC\b|fr[ée]quence|cardiaque|heart/i,
+    SPO2: /spo2|oxyg[èe]ne|saturation/i,
+    TEMP: /\bTEMP\b|temp[ée]rature|fi[èe]vre|hyperthermie|hypothermie/i,
+    TA: /\bTA\b|tension|pression art|blood pressure/i,
+    SOMMEIL: /sommeil|sleep/i
+  };
+
   alerteCritiquePour(code: string, alertes: Alerte[]): boolean {
-    const motif = new RegExp('\\b' + code + '\\b');
+    const motif = this.motifsAlerte[code] ?? new RegExp('\\b' + code + '\\b', 'i');
     return alertes.some(a => a.niveau === 'critique' && motif.test(a.message));
   }
 
